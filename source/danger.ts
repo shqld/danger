@@ -1,15 +1,19 @@
-// This file represents the module that is exposed as the danger API
+import { getCISourceForEnv } from "./ci_source/get_ci_source"
+import { getPlatformForEnv } from "./platforms/platform"
+import { jsonDSLGenerator } from "./runner/dslGenerator"
 
-throw `
-Hey there, it looks like you're trying to import the danger module. Turns out
-that the code you write in a Dangerfile.js is actually a bit of a sneaky hack. 
+export async function init(env?: Object) {
+  env = env || process.env
 
-When running Danger, the import or require for Danger is removed before the code
-is evaluated. Instead all of the imports are added to the global runtime, so if
-you are importing Danger to use one of it's functions - you should instead just
-use the global object for the root DSL elements.
+  const ciSource = await getCISourceForEnv(env)
 
-There is a spectrum thread for discussion here:
-  - https://spectrum.chat/?t=0a005b56-31ec-4919-9a28-ced623949d4d
+  if (!ciSource) {
+    throw new Error("Env passed to getCISourceForEnv seems incorrect")
+  }
 
-`
+  const platform = await getPlatformForEnv(env, ciSource)
+
+  const dsl = await jsonDSLGenerator(platform)
+
+  return dsl
+}
