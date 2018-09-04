@@ -4,16 +4,6 @@
   "description": "Unit tests for Team Culture",
   "main": "distribution/danger.js",
   "typings": "distribution/danger.d.ts",
-  "bin": {
-    "danger": "distribution/commands/danger.js",
-    "danger-pr": "distribution/commands/danger-pr.js",
-    "danger-runner": "distribution/commands/danger-runner.js",
-    "danger-process": "distribution/commands/danger-process.js",
-    "danger-ci": "distribution/commands/danger-ci.js",
-    "danger-init": "distribution/commands/danger-init.js",
-    "danger-local": "distribution/commands/danger-local.js",
-    "danger-reset-status": "distribution/commands/danger-reset-status.js"
-  },
   "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
