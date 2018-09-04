@@ -10,8 +10,7 @@ import { GitHubPRDSL, GitHubUser } from "../../dsl/GitHubDSL"
 import { dangerSignaturePostfix, dangerIDToString } from "../../runner/templates/githubIssueTemplate"
 import { api as fetch } from "../../api/fetch"
 import { Comment } from "../platform"
-import { RepoMetaData } from "../../dsl/BitBucketServerDSL"
-import { CheckOptions } from "./comms/checks/resultsToCheck"
+import { RepoMetaData } from "../../dsl/RepoMetadata"
 
 // The Handle the API specific parts of the github
 
@@ -356,23 +355,6 @@ export class GitHubAPI {
     )
 
     return res.ok
-  }
-
-  postCheck = async (check: CheckOptions, token: string) => {
-    const repo = this.repoMetadata.repoSlug
-    const res = await this.post(
-      `repos/${repo}/check-runs`,
-      {
-        Accept: "application/vnd.github.antiope-preview+json,application/vnd.github.machine-man-preview+json",
-        Authorization: `token ${token}`,
-      },
-      check
-    )
-    if (res.ok) {
-      return res.json()
-    } else {
-      throw await res.json()
-    }
   }
 
   // API Helpers

@@ -57,11 +57,12 @@ import { GitHubAPI } from "../github/GitHubAPI"
 import { GitCommit } from "../../dsl/Commit"
 import { FakeCI } from "../../ci_source/providers/Fake"
 import * as os from "os"
-import { RepoMetaData } from "../../dsl/BitBucketServerDSL"
+import { RepoMetaData } from "../../dsl/RepoMetadata"
 
 const EOL = os.EOL
 
 describe("getPlatformDSLRepresentation", () => {
+  // @ts-ignore
   let github: GitHub
 
   beforeEach(() => {

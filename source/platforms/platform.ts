@@ -2,10 +2,7 @@ import { Env, CISource } from "../ci_source/ci_source"
 import { GitJSONDSL, GitDSL } from "../dsl/GitDSL"
 import { GitHub } from "./GitHub"
 import { GitHubAPI } from "./github/GitHubAPI"
-import { BitBucketServer } from "./BitBucketServer"
-import { BitBucketServerAPI, bitbucketServerRepoCredentialsFromEnv } from "./bitbucket_server/BitBucketServerAPI"
 import { DangerResults } from "../dsl/DangerResults"
-import { ExecutorOptions } from "../runner/Executor"
 
 /** A type that represents the downloaded metadata about a code review session */
 export type Metadata = any
@@ -49,13 +46,13 @@ export interface Platform extends PlatformCommunicator {
 // separate out the comment handling vs the DSL generation for a platform
 export interface PlatformCommunicator {
   /** Basically, should a chance for async platform side-effects before passing the results into the comment section of danger issue create/update/deleter */
-  platformResultsPreMapper?: (results: DangerResults, options: ExecutorOptions) => Promise<DangerResults>
+  platformResultsPreMapper?: (results: DangerResults) => Promise<DangerResults>
   /** Can it update comments? */
   supportsCommenting: () => boolean
   /** Does the platform support inline comments? */
   supportsInlineComments: () => boolean
   /** Allows the platform to do whatever it wants, instead of using the default commenting system  */
-  handlePostingResults?: (results: DangerResults, options: ExecutorOptions) => void
+  handlePostingResults?: (results: DangerResults) => void
   /** Gets inline comments for current PR */
   getInlineComments: (dangerID: string) => Promise<Comment[]>
   /** Creates a comment on the PR */
@@ -81,20 +78,6 @@ export interface PlatformCommunicator {
  * @returns {Platform} returns a platform if it can be supported
  */
 export function getPlatformForEnv(env: Env, source: CISource, requireAuth = true): Platform {
-  // BitBucket Server
-  const bbsHost = env["DANGER_BITBUCKETSERVER_HOST"]
-  if (bbsHost) {
-    const api = new BitBucketServerAPI(
-      {
-        pullRequestID: source.pullRequestID,
-        repoSlug: source.repoSlug,
-      },
-      bitbucketServerRepoCredentialsFromEnv(env)
-    )
-    const bbs = new BitBucketServer(api)
-    return bbs
-  }
-
   // GitHub
   const ghToken = env["DANGER_GITHUB_API_TOKEN"]
   if (ghToken || !requireAuth) {

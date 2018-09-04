@@ -7,7 +7,6 @@ import * as NodeGitHub from "@octokit/rest"
 import { Platform } from "./platform"
 
 import { GitHubIssueCommenter } from "./github/comms/issueCommenter"
-import { GitHubChecksCommenter } from "./github/comms/checksCommenter"
 
 /** Handles conforming to the Platform Interface for GitHub, API work is handle by GitHubAPI */
 
@@ -68,7 +67,6 @@ export const GitHub = (api: GitHubAPI) => {
     },
 
     ...GitHubIssueCommenter(api),
-    ...(GitHubChecksCommenter(api) || {}),
 
     getFileContents: api.fileContents,
   } as GitHubType
